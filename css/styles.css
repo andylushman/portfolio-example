@@ -31,7 +31,15 @@ h3 {
 *******************/
 
 header {
-  float: left;
+  /*float: left;*/
+  /* I suspect this was done because you couldn't get the element to contain its children?
+   * 'float' takes the element out of the document flow
+   *   - this was causing the #wrapper to extend up into the space that should be occupied by the <header>
+   * We want the document to know about this header element
+   * instead of using float: left to contain the children, use:
+   *   - overflow: auto;
+   */
+  overflow: auto;
   margin: 0 0 30px 0;
   padding: 5px 0 0 0;
   width: 100%;
@@ -97,10 +105,36 @@ footer {
 }
 
 .social-icon {
-  width: 8%;
-  height: 8%;
+  /*width: 8%;
+  height: 8%;*/
+  /*
+   * generally, you'd want an icon to stay the same size
+   */
+  width: 75px;
+  height: 40px;
   margin: 0 5px;
+  /*
+   * explained below
+   */
+  vertical-align: middle;
 }
+
+/*
+ * very esoteric problem here (took a little research)
+ * basic gist: <a> tags do not play nicely with height because they are display: inline
+ *   - so you need to change the <a> tags' display property to something else to contain the <a> children properly (but this introduces issue #2)
+ * 1) display: inline-block allows the anchor tag to take up height
+ * 2) something about doing this causes the <a> tag to add 4px of height due to a default 'vertical-align: baseline'
+ *      - to fix this, we give both the <a> and it's child <img> element the same vertical-align property
+ *
+ * http://stackoverflow.com/questions/21724883/css-anchor-inline-block-misaligned
+ */
+footer a {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+
 
 
 
@@ -112,6 +146,11 @@ footer {
   margin: 0;
   padding: 0;
   list-style: none;
+  /*
+   * Just like the <header> above, we need to have this <ul> element take up the correct amount of space relative to its children
+   * this also forces the <section> to respect the height of the <ul>
+   */
+  overflow: auto;
 }
 
 #gallery li {
